@@ -59,12 +59,13 @@ def call_models(list_models):
     """
     list_of_models = list()
     for model in list_models:
-        if model == 'svm_model':
-            list_of_models.append(svm_model())
-        elif model == 'kmeans_model':
-            list_of_models.append(kmeans_model())
-        elif model == 'decision_tree_model':
-            list_of_models.append(decision_tree_model())
+        if type(model) == str:
+            if model == 'svm_model':
+                list_of_models.append(svm_model())
+            elif model == 'kmeans_model':
+                list_of_models.append(kmeans_model())
+            elif model == 'decision_tree_model':
+                list_of_models.append(decision_tree_model())
         else:
             n_neurons_per_layer = model[1]
             n_layers = model[2]
@@ -74,4 +75,3 @@ def call_models(list_models):
                 print('Not loaded neural network')
                 continue
     return list_of_models
-
