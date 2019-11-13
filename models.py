@@ -2,6 +2,7 @@ import keras
 import sklearn
 from keras.layers import Dense
 from sklearn import tree, svm
+from sklearn.cluster import KMeans
 
 
 def svm_model():
@@ -15,7 +16,7 @@ def kmeans_model():
     """
     :return: instance of the model
     """
-    return sklearn.cluster.KMeans(n_clusters=2, random_state=0)
+    return KMeans(n_clusters=2, random_state=0)
 
 
 def decision_tree_model():
