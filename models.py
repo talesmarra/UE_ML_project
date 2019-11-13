@@ -69,8 +69,9 @@ def call_models(list_models):
         else:
             n_neurons_per_layer = model[1]
             n_layers = model[2]
+            input_dim = model[3]
             try:
-                list_of_models.append(neural_network(n_neurons_per_layer, n_layers))
+                list_of_models.append(neural_network(n_neurons_per_layer, n_layers, input_dim))
             except:
                 print('Not loaded neural network')
                 continue
