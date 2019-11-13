@@ -22,7 +22,7 @@ def load_preprocessing_data(path,header = 'infer', index_col = None):
     print("String detection process done")
     vary, yn = stringDetection(y)
     print("String detection process done")
-<<<<<<< HEAD
+
     binar = False
     # cleaning
 
@@ -42,21 +42,17 @@ def load_preprocessing_data(path,header = 'infer', index_col = None):
     #scale and normalize
     xn = scale_norm(xn, varx, modx)
     print("Scaling and normalize process done")
-=======
->>>>>>> e03d52d20621da637068301eea083e722949b3e6
+
 
     return xn, yn
 
 
-<<<<<<< HEAD
 def scale_norm(xn, var, mod):
     for i in range(len(var)):
         if mod[i] == 'numeric':
             xn.loc[:, xn.columns[i]] = pd.DataFrame(preprocessing.scale(xn[xn.columns[i]]), columns=[xn.columns[i]])
     return xn
-=======
 
->>>>>>> e03d52d20621da637068301eea083e722949b3e6
 
 def stringDetection(x):
     """
@@ -100,7 +96,6 @@ def replacement(xn, mod):
                 xf.loc[k] = xn[k]
     return xf
 
-<<<<<<< HEAD
 
 def cleaning(var, xn, binar):
     mod = [[] for i in range(len(var))]
@@ -127,5 +122,4 @@ def cleaning(var, xn, binar):
 
 
     return var, xn, mod
-=======
->>>>>>> e03d52d20621da637068301eea083e722949b3e6
+
