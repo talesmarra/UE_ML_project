@@ -16,6 +16,8 @@ if __name__ == "__main__":
     X,y,label = load_preprocessing_data(path,index_col=0,binar = True) # for kidney_disease
     #X,y = load_preprocessing_data(path,header=None,binar = True) #for banknote
 
+    y_labels = [label[0], label[1]]
+
     # load preprocessed data
 
     X_train, X_test, y_train, y_test = data_split(X,y,test_size)
@@ -32,7 +34,6 @@ if __name__ == "__main__":
 
         # we plot the confusion matrix for both the train and test datasets
 
-        y_labels = ['0', '1']
 
         plot_confusion_matrix(model, X_train, y_train, models_string_dic[models_string[i]], y_labels, train_flag=True)
 
