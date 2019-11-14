@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     path = "data_classification/kidney_disease.csv"
 
-    X,y = load_preprocessing_data(path,index_col=0,binar = True) # for kidney_disease
+    X,y,label = load_preprocessing_data(path,index_col=0,binar = True) # for kidney_disease
     #X,y = load_preprocessing_data(path,header=None,binar = True) #for banknote
 
     # load preprocessed data
