@@ -23,11 +23,10 @@ def load_preprocessing_data(path,header = 'infer', index_col = None, binar = Fal
     vary, yn = stringDetection(y)
     print("String detection process done")
 
-
     # cleaning
 
-    vary, yn, mody = cleaning(vary, yn, binar)
-    varx, xn, modx = cleaning(varx, xn, binar)
+    vary, yn, mody, labely = cleaning(vary, yn, binar, target=True)
+    varx, xn, modx, labelx = cleaning(varx, xn, binar, target=False)
 
     # validation
     if yn.isnull().any().all():
@@ -43,8 +42,7 @@ def load_preprocessing_data(path,header = 'infer', index_col = None, binar = Fal
     xn = scale_norm(xn, varx, modx)
     print("Scaling and normalize process done")
 
-
-    return xn, yn
+    return xn, yn, labely
 
 
 def scale_norm(xn, var, mod):
@@ -97,9 +95,9 @@ def replacement(xn, mod):
     return xf
 
 
-def cleaning(var, xn, binar):
+def cleaning(var, xn, binar, target):
     mod = []
-
+    label = {}
     for i in range(len(var)):
 
 
@@ -112,8 +110,12 @@ def cleaning(var, xn, binar):
             if binar:
                 Ncases = len(var[i])
                 v = [i for i in range(len(var[i]))]
-                print("Binarization...", xn.columns[i])
+                #print("Binarization...", xn.columns[i])
                 xn[xn.columns[i]] = xn[xn.columns[i]].replace(var[i], v)
+                print(var[i])
+                if target:
+                    for k in range(len(v)):
+                        label[v[k]] = var[i][k]
                 var[i] = []
 
                 #print(xn[xn.columns[i]].mean())
@@ -123,5 +125,5 @@ def cleaning(var, xn, binar):
             else:
                 xn[xn.columns[i]].fillna(method ='bfill', inplace = True)
 
-    return var, xn, mod
+    return var, xn, mod, label
 
