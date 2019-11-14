@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     # load preprocessed data
 
-    X_train, X_test, y_train, y_test = data_split(X,y,test_size)
+    X_train, X_test, y_train, y_test = data_split(X, y, test_size)
 
     models = call_models(models_string)
 
