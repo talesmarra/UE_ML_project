@@ -10,7 +10,7 @@ import numpy as np
 from sklearn import preprocessing
 
 
-def load_preprocessing_data(path,header = 'infer', index_col = None):
+def load_preprocessing_data(path,header = 'infer', index_col = None, binar = False):
 
     df = pd.read_csv(path,header = header, index_col=index_col)
     lines = df.shape[0]
@@ -23,7 +23,7 @@ def load_preprocessing_data(path,header = 'infer', index_col = None):
     vary, yn = stringDetection(y)
     print("String detection process done")
 
-    binar = False
+
     # cleaning
 
     vary, yn, mody = cleaning(vary, yn, binar)
@@ -50,6 +50,7 @@ def load_preprocessing_data(path,header = 'infer', index_col = None):
 def scale_norm(xn, var, mod):
     for i in range(len(var)):
         if mod[i] == 'numeric':
+            print(xn.columns[i])
             xn.loc[:, xn.columns[i]] = pd.DataFrame(preprocessing.scale(xn[xn.columns[i]]), columns=[xn.columns[i]])
     return xn
 
@@ -98,16 +99,19 @@ def replacement(xn, mod):
 
 
 def cleaning(var, xn, binar):
-    mod = [[] for i in range(len(var))]
+    mod = []
+
     for i in range(len(var)):
 
+
         if not var[i]:
-            mod[i] = 'numeric'
+
+            mod.append('numeric')
             xn[xn.columns[i]].fillna(float(xn[xn.columns[i]].mean()), inplace=True)
         else:
-            mod[i] = 'modal'
+            mod.append('modal')
             if binar:
-                mod = len(var[i])
+                Ncases = len(var[i])
                 v = [i for i in range(len(var[i]))]
                 print("Binarization...", xn.columns[i])
                 xn[xn.columns[i]] = xn[xn.columns[i]].replace(var[i], v)
@@ -115,11 +119,10 @@ def cleaning(var, xn, binar):
 
                 #print(xn[xn.columns[i]].mean())
 
-                xn.loc[:, xn.columns[i]] = replacement(xn[xn.columns[i]], mod)
+                xn.loc[:, xn.columns[i]] = replacement(xn[xn.columns[i]], Ncases)
                 #print(xn[xn.columns[i]].mean())
             else:
                 xn[xn.columns[i]].fillna(method ='bfill', inplace = True)
-
 
     return var, xn, mod
 

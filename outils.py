@@ -4,9 +4,6 @@ from keras import Sequential
 import matplotlib.pyplot as plt
 import numpy as np
 
-def data_preprocessing():
-    pass
-
 
 def data_split(X,y,test_size):
 

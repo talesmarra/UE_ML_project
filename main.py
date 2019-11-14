@@ -1,26 +1,20 @@
 
 from models import *
-from utils import *
+from outils import *
+from prepro import *
 from sklearn.datasets import load_breast_cancer
 
 if __name__ == "__main__":
 
-
-    # , ['neural_network',[5,15,5,5,5],5]
-
     test_size = 0.33
-
-    # load data
-
-    X = load_breast_cancer()['data']
-    y = load_breast_cancer()['target']
-
-    print(X.shape)
 
     models_string = ['decision_tree_model','kmeans_model']
     #['neural_network', [5, 15, 5, 5, 5], 5, X.shape[1]]]
 
-    data_preprocessing()
+    path = "data_classification/kidney_disease.csv"
+
+    X,y = load_preprocessing_data(path,index_col=0,binar = True) # for kidney_disease
+    #X,y = load_preprocessing_data(path,header=None,binar = True) #for banknote
 
     # load preprocessed data
 
