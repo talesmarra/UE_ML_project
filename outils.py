@@ -43,7 +43,7 @@ def validation(model,x,y):
         return model.score(x, y)
 
 
-def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag):
+def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag, image_folders="Images"):
 
     y_pred = model.predict(x)
 
@@ -59,22 +59,46 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag)
 
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-    ax = plt.subplot()
-    sns.heatmap(np.array(cm), annot=True, ax=ax)
+    fig, ax = plt.subplots()
 
-    ax.set_xlabel('Predicted labels')
-    ax.set_ylabel('True labels')
+    # we plot
 
+    im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    ax.figure.colorbar(im, ax=ax)
 
-    ax.xaxis.set_ticklabels(cm_labels)
-    ax.yaxis.set_ticklabels(cm_labels)
+    fmt = '.2f'
+    thresh = cm.max() / 2
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, format(cm[i, j],fmt),
+                    ha="center", va="center",
+                    color="white" if cm[i, j] > thresh else "black")
 
     if train_flag:
-        ax.set_title(model_string + ": confusion matrix for train set")
+        title = model_string + ": confusion matrix for train set"
+        fig_name = model_string + '-cm-train.png'
     else:
-        ax.set_title(model_string + ": confusion matrix for test set")
+        title = model_string + ": confusion matrix for test set"
+        fig_name = model_string + '-cm-test.png'
 
-    plt.show()
+    labels = ['', '', cm_labels[0], '', '', '', cm_labels[1]]
+
+    ax.set(#xticks=np.arange(cm.shape[1]),
+           #yticks=np.arange(cm.shape[0]),
+           # ... and label them with the respective list entries
+           xticklabels=labels, yticklabels=labels,
+           title=title,
+           ylabel='True label',
+           xlabel='Predicted label')
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+
+    fig.tight_layout()
+
+    plt.savefig(image_folders + "/" + fig_name)
+    plt.close()
 
 
 def comparation():
