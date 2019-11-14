@@ -50,7 +50,6 @@ def load_preprocessing_data(path,header = 'infer', index_col = None, binar = Fal
 def scale_norm(xn, var, mod):
     for i in range(len(var)):
         if mod[i] == 'numeric':
-            print(xn.columns[i])
             xn.loc[:, xn.columns[i]] = pd.DataFrame(preprocessing.scale(xn[xn.columns[i]]), columns=[xn.columns[i]])
     return xn
 

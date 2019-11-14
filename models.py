@@ -16,7 +16,7 @@ def kmeans_model():
     """
     :return: instance of the model
     """
-    return KMeans(n_clusters=2, random_state=0)
+    return KMeans(n_clusters=2, random_state=42)
 
 
 def decision_tree_model():

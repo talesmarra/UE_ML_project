@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     test_size = 0.33
 
-    models_string = ['decision_tree_model','kmeans_model']
+    models_string = ['decision_tree_model','kmeans_model','svm_model']
     #['neural_network', [5, 15, 5, 5, 5], 5, X.shape[1]]]
 
     path = "data_classification/kidney_disease.csv"
@@ -22,16 +22,18 @@ if __name__ == "__main__":
 
     models = call_models(models_string)
 
-    for i,model in enumerate(models):
+    for i, model in enumerate(models):
 
-        train_model(model,X_train,y_train)
+        train_model(model, X_train, y_train)
 
-        accuracy = validation(model,X_test,y_test)
+        accuracy = validation(model, X_test, y_test)
 
-        print(models_string[i], accuracy)
+        print(models_string[i], ' accuracy: ', accuracy)
 
         # we plot the confusion matrix for both the train and test datasets
 
-        plot_confusion_matrix(model,X_train,y_train, train_flag=True)
+        y_labels = ['0', '1']
 
-        plot_confusion_matrix(model, X_test, y_test, train_flag=False)
+        plot_confusion_matrix(model, X_train, y_train, models_string_dic[models_string[i]], y_labels, train_flag=True)
+
+        plot_confusion_matrix(model, X_test, y_test, models_string_dic[models_string[i]], y_labels, train_flag=False)

@@ -3,6 +3,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from keras import Sequential
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 
 def data_split(X,y,test_size):
@@ -24,8 +25,6 @@ def train_model(model,x,y,epochs=50):
     return model
 
 
-def optimize_hyperparam(model,min_accuracy):
-    pass
 
 def validation(model,x,y):
 
@@ -37,13 +36,14 @@ def validation(model,x,y):
 
         y_pred = y_pred.reshape(len(y))
 
-        return accuracy_score(y,y_pred)
+        return accuracy_score(y, y_pred)
 
     else:
 
-        return model.score(x,y)
+        return model.score(x, y)
 
-def plot_confusion_matrix(model,x,y_true,train_flag):
+
+def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag):
 
     y_pred = model.predict(x)
 
@@ -53,22 +53,40 @@ def plot_confusion_matrix(model,x,y_true,train_flag):
 
         y_pred = y_pred.reshape(len(y_true))
 
-    M = confusion_matrix(y_true, y_pred)
+    cm = confusion_matrix(y_true, y_pred)
 
     # we normalize the confusion matrix
 
-    M = M.astype('float') / M.sum(axis=1)[:, np.newaxis]
+    cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-    plt.imshow(M)
-    plt.colorbar()
+    ax = plt.subplot()
+    sns.heatmap(np.array(cm), annot=True, ax=ax)
+
+    ax.set_xlabel('Predicted labels')
+    ax.set_ylabel('True labels')
+
+
+    ax.xaxis.set_ticklabels(cm_labels)
+    ax.yaxis.set_ticklabels(cm_labels)
 
     if train_flag:
-        plt.title("Confusion matrix for train dataset")
+        ax.set_title(model_string + ": confusion matrix for train set")
     else:
-        plt.title("Confusion matrix for test dataset")
+        ax.set_title(model_string + ": confusion matrix for test set")
 
     plt.show()
 
 
 def comparation():
     pass
+
+
+def optimize_hyperparam(model,min_accuracy):
+    pass
+
+models_string_dic = {
+    'decision_tree_model': 'Decision tree',
+    'kmeans_model': 'K-means',
+    'svm_model': 'SVM',
+    'neural_network': 'Neural network',
+}
