@@ -4,6 +4,7 @@ from keras.layers import Dense
 from sklearn import tree, svm
 from sklearn.cluster import KMeans
 
+
 def svm_model():
     """
     :return: instance of the model
