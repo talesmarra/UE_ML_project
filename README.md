@@ -1,7 +1,6 @@
 # UE_ML_project
-<center>
-  <img src="https://www.imt-atlantique.fr/sites/default/files/logo_mt_0_0.png" WIDTH=280 HEIGHT=280>
-</center>
+
+  <img src="https://www.imt-atlantique.fr/sites/default/files/logo_mt_0_0.png" WIDTH=200 HEIGHT=140 >
 
 This is the mini project for the UE Machine Learning 2019.
 
