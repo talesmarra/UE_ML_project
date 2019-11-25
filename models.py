@@ -3,7 +3,7 @@ import sklearn
 from keras.layers import Dense
 from sklearn import tree, svm
 from sklearn.cluster import KMeans
-
+from sklearn.naive_bayes import GaussianNB
 
 def svm_model():
     """
@@ -26,10 +26,10 @@ def decision_tree_model():
     return tree.DecisionTreeClassifier()
 
 
-def neural_network(n_neurons_per_layer, n_layers, input_dim):
+def neural_network(n_neurons_per_layer=[5,3,2], n_layers=3, input_dim=3):
     """
     :param n_layers : (int) number of layers for the neural network
-    :param n_neurons_per_layer: (list[int]) how many neurons per layer of the network
+    :param n_neurons_per_layer: (list[int]) how many neurons per layer of the network, without output layer
     :param input_dim: (int) dimension of input
     :return: instance of the model
     """
@@ -43,7 +43,7 @@ def neural_network(n_neurons_per_layer, n_layers, input_dim):
                   input_dim=input_dim))
         for n in n_neurons_per_layer[1:]:
             # Hidden Layers
-            classifier.add(Dense(n, activation='relu', kernel_initializer='random_normal'))
+            classifier.add(Dense(n, activation='tanh', kernel_initializer='random_normal'))
 
             # Output Layer
         classifier.add(Dense(1, activation='sigmoid', kernel_initializer='random_normal'))
@@ -52,6 +52,13 @@ def neural_network(n_neurons_per_layer, n_layers, input_dim):
         classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
         return classifier
 
+
+def gaussian_bayes_model():
+    """
+
+    :return:Gaussian Naive Bayes (GaussianNB)
+    """
+    return GaussianNB()
 
 def call_models(list_models):
     """
@@ -67,6 +74,8 @@ def call_models(list_models):
                 list_of_models.append(kmeans_model())
             elif model == 'decision_tree_model':
                 list_of_models.append(decision_tree_model())
+            elif model == 'bayes_model':
+                list_of_models.append(gaussian_bayes_model())
         else:
             n_neurons_per_layer = model[1]
             n_layers = model[2]

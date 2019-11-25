@@ -3,7 +3,6 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 from keras import Sequential
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 
 
 def data_split(X, y, test_size):
@@ -51,7 +50,7 @@ def validation(model, x, y):
 
         y_pred = model.predict(x)
 
-        y_pred = np.array([y_pred > 0.5]).astype(np.int)
+        y_pred = np.array([y_pred > 0.5]).astype(np.int16)
 
         y_pred = y_pred.reshape(len(y))
 
@@ -142,4 +141,5 @@ models_string_dic = {
     'kmeans_model': 'K-means',
     'svm_model': 'SVM',
     'neural_network': 'Neural network',
+    'bayes_model': 'Bayes classifier'
 }
