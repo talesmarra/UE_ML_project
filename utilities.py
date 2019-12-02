@@ -30,7 +30,7 @@ def train_model(model, x, y, epochs=50):
     """
     if isinstance(model, Sequential):
 
-        model.fit(x, y, epochs=epochs)
+        model.fit(x, y, epochs=epochs, verbose=0)
 
     else:
         model.fit(x, y)
@@ -152,7 +152,9 @@ def print_acc_2_file(file, model, accuracy):
     :return:
     """
 
-    file.write(models_string_dic[model]+": "+str(accuracy)+"\n")
+    acc_str = '%.3f' % accuracy
+
+    file.write(models_string_dic[model] + ": " + acc_str +"\n")
 
 
 # Dictionary used to set the image title more properly

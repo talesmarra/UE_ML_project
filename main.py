@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
         accuracy = validation(model, X_test, y_test)
 
-        print(models_string[i], ' accuracy: ', accuracy)
+        print(models_string[i], ' accuracy: ', '%.3f' % accuracy)
 
         print_acc_2_file(accs_file, models_string[i], accuracy)
 
