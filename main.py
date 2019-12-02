@@ -1,11 +1,14 @@
 from models import *
-from outils import *
+from utilities import *
 from prepro import *
-from sklearn.datasets import load_breast_cancer
 import argparse
 import sys
 
 if __name__ == "__main__":
+
+    output_folder = "Output"
+    accs_file_path = output_folder + "/accuracies_file"
+    test_size = 0.33
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--models', type=str, help='the list of models you want to use',
@@ -14,15 +17,16 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, default='kidney-disease',
                         help='Dataset to use: either kidney-disease or '
                              'bank-note ')
-    test_size = 0.33
     args = parser.parse_args()
 
     models_string = [item for item in args.models.split(',')]
     if args.dataset == 'kidney-disease':
         path = "data_classification/kidney_disease.csv"
+        accs_file_path = accs_file_path + '_kidney_disease.txt'
         X, y, label = load_preprocessing_data(path, index_col=0, binar=True)  # for kidney_disease
     elif args.dataset == 'bank-note':
         path = "data_classification/data_banknote_authentication.txt"
+        accs_file_path = accs_file_path + '_bank_note.txt'
         X, y, label = load_preprocessing_data(path, header=None, binar=True)  # for banknote
     else:
         print('dataset not available or misspelled')
@@ -54,8 +58,10 @@ if __name__ == "__main__":
 
         print(models_string[i], ' accuracy: ', accuracy)
 
+        print_acc_2_file(accs_file, models_string[i], accuracy)
+
         # we plot the confusion matrix for both the train and test datasets
 
-        plot_confusion_matrix(model, X_train, y_train, models_string_dic[models_string[i]], y_labels, train_flag=True)
+        plot_confusion_matrix(model, X_train, y_train, models_string_dic[models_string[i]], y_labels, train_flag=True, dataset=args.dataset)
 
-        plot_confusion_matrix(model, X_test, y_test, models_string_dic[models_string[i]], y_labels, train_flag=False)
+        plot_confusion_matrix(model, X_test, y_test, models_string_dic[models_string[i]], y_labels, train_flag=False, dataset=args.dataset)

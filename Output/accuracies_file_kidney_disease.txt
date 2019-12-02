@@ -2,3 +2,5 @@ Accuracy file for: kidney-disease dataset
 Decision tree: 0.9848484848484849
 KNN: 0.9621212121212122
 SVM: 0.9848484848484849
+Neural network: 0.9848484848484849
+Bayes classifier: 0.9318181818181818

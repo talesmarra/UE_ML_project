@@ -61,7 +61,7 @@ def validation(model, x, y):
         return model.score(x, y)
 
 
-def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag, image_folders="Output/Images"):
+def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag, dataset, image_folders="Output/Images"):
     """
 
     :param model: instance of the model
@@ -70,6 +70,7 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag,
     :param model_string: name of model
     :param cm_labels: type of colormap
     :param train_flag: true if train, else false
+    :param dataset: dataset used,for naming the image
     :param image_folders: folder to save images
     :return:
     """
@@ -103,10 +104,10 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag,
 
     if train_flag:
         title = model_string + ": confusion matrix for train set"
-        fig_name = model_string + '-cm-train.png'
+        fig_name = model_string + '-' + dataset + '-cm-train.png'
     else:
         title = model_string + ": confusion matrix for test set"
-        fig_name = model_string + '-cm-test.png'
+        fig_name = model_string + '-' + dataset + '-cm-test.png'
 
     labels = ['', '', cm_labels[0], '', '', '', cm_labels[1]]
 
