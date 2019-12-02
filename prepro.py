@@ -78,7 +78,6 @@ def stringDetection(x):
 
     return var, xn
 
-
 def replacement(xn, mod):
     xf = pd.DataFrame(np.zeros(shape=(xn.shape[0], 1)), columns=[xn.name], index=np.arange(0, xn.shape[0]))
     if mod == 2:
