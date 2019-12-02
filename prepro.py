@@ -112,7 +112,6 @@ def cleaning(var, xn, binar, target):
                 v = [i for i in range(len(var[i]))]
                 #print("Binarization...", xn.columns[i])
                 xn[xn.columns[i]] = xn[xn.columns[i]].replace(var[i], v)
-                print(var[i])
                 if target:
                     for k in range(len(v)):
                         label[v[k]] = var[i][k]
