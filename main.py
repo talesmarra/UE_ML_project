@@ -6,9 +6,13 @@ import sys
 
 if __name__ == "__main__":
 
+    # Some general parameters
+
     output_folder = "Output"
     accs_file_path = output_folder + "/accuracies_file"
     test_size = 0.33
+
+    # Dataset and models to use are passed by command
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--models', type=str, help='the list of models you want to use',

@@ -155,6 +155,8 @@ def print_acc_2_file(file, model, accuracy):
     file.write(models_string_dic[model]+": "+str(accuracy)+"\n")
 
 
+# Dictionary used to set the image title more properly
+
 models_string_dic = {
     'decision_tree_model': 'Decision tree',
     'knn_model': 'KNN',
