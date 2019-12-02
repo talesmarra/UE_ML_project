@@ -41,7 +41,7 @@ def load_preprocessing_data(path,header = 'infer', index_col = None, binar = Fal
     #scale and normalize
     xn = scale_norm(xn, varx, modx)
     print("Scaling and normalize process done")
-
+    print(labely)
     return xn, yn, labely
 
 
@@ -123,6 +123,11 @@ def cleaning(var, xn, binar, target):
                 #print(xn[xn.columns[i]].mean())
             else:
                 xn[xn.columns[i]].fillna(method ='bfill', inplace = True)
+    if not label and target:
+        labels = list(set(xn[xn.columns[0]]))
+        v = [i for i in range(len(labels))]
+        for k in range(len(v)):
+            label[v[k]] = labels[k]
 
     return var, xn, mod, label
 

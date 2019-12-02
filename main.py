@@ -22,7 +22,8 @@ if __name__ == "__main__":
         path = "data_classification/kidney_disease.csv"
         X, y, label = load_preprocessing_data(path, index_col=0, binar=True)  # for kidney_disease
     elif args.dataset == 'bank-note':
-        X, y = load_preprocessing_data(path, header=None, binar=True)  # for banknote
+        path = "data_classification/data_banknote_authentication.txt"
+        X, y, label = load_preprocessing_data(path, header=None, binar=True)  # for banknote
     else:
         print('dataset not available or misspelled')
         sys.exit(1)
@@ -37,7 +38,7 @@ if __name__ == "__main__":
     models = call_models(models_string)
 
     for i, model in enumerate(models):
-        train_model(model, X_train, y_train)
+        train_model(model, X_train, np.ravel(y_train))
 
         accuracy = validation(model, X_test, y_test)
 
