@@ -5,6 +5,7 @@ from sklearn import tree, svm
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
+
 def svm_model():
     """
     :return: instance of the model
@@ -26,13 +27,12 @@ def decision_tree_model():
     return tree.DecisionTreeClassifier()
 
 
-def neural_network(n_neurons_per_layer=[5,3,2], n_layers=3, input_dim=3):
+def neural_network(input_dim,n_neurons_per_layer=None, n_layers=3):
     """
-    :param n_layers : (int) number of layers for the neural network
-    :param n_neurons_per_layer: (list[int]) how many neurons per layer of the network, without output layer
-    :param input_dim: (int) dimension of input
     :return: instance of the model
     """
+    if n_neurons_per_layer is None:
+        n_neurons_per_layer = [5, 3, 2]
     if len(n_neurons_per_layer) != n_layers:
         print('number of layers of network not match number of neurons per layer')
     else:
@@ -60,8 +60,10 @@ def gaussian_bayes_model():
     """
     return GaussianNB()
 
-def call_models(list_models):
+
+def call_models(list_models, dataset):
     """
+    :param dataset: type of dataset
     :param: list_models: the names of the models you want to use
     :type list_models: list
     """
@@ -76,13 +78,14 @@ def call_models(list_models):
                 list_of_models.append(decision_tree_model())
             elif model == 'bayes_model':
                 list_of_models.append(gaussian_bayes_model())
-        else:
-            n_neurons_per_layer = model[1]
-            n_layers = model[2]
-            input_dim = model[3]
-            try:
-                list_of_models.append(neural_network(n_neurons_per_layer, n_layers, input_dim))
-            except:
-                print('Not loaded neural network')
-                continue
+            elif model == 'neural_network':
+                if dataset == 'kidney-disease':
+                    input_dim = 24
+                else:
+                    input_dim = 4
+                try:
+                    list_of_models.append(neural_network(input_dim))
+                except:
+                    print('Not loaded neural network')
+                    continue
     return list_of_models

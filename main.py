@@ -27,15 +27,15 @@ if __name__ == "__main__":
     else:
         print('dataset not available or misspelled')
         sys.exit(1)
-    # models_string.append(['neural_network', [5, 15, 5, 5, 5], 5, X.shape[1]])
-
     y_labels = [label[0], label[1]]
 
     # load preprocessed data
 
     X_train, X_test, y_train, y_test = data_split(X, y, test_size)
-
-    models = call_models(models_string)
+    if args.dataset == 'kidney-disease':
+        models = call_models(models_string, 'kidney-disease')
+    else:
+        models = call_models(models_string, 'bank-note')
 
     for i, model in enumerate(models):
         train_model(model, X_train, np.ravel(y_train))
