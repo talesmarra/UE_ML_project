@@ -138,7 +138,7 @@ def optimize_hyperparam(model, min_accuracy):
 
 models_string_dic = {
     'decision_tree_model': 'Decision tree',
-    'kmeans_model': 'K-means',
+    'knn_model': 'KNN',
     'svm_model': 'SVM',
     'neural_network': 'Neural network',
     'bayes_model': 'Bayes classifier'

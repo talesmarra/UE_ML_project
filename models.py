@@ -2,7 +2,7 @@ import keras
 import sklearn
 from keras.layers import Dense
 from sklearn import tree, svm
-from sklearn.cluster import KMeans
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
 def svm_model():
@@ -12,11 +12,11 @@ def svm_model():
     return svm.SVC(gamma='scale')
 
 
-def kmeans_model():
+def knn_model():
     """
     :return: instance of the model
     """
-    return KMeans(n_clusters=2, random_state=0)
+    return KNeighborsClassifier(n_neighbors=5)
 
 
 def decision_tree_model():
@@ -70,8 +70,8 @@ def call_models(list_models):
         if type(model) == str:
             if model == 'svm_model':
                 list_of_models.append(svm_model())
-            elif model == 'kmeans_model':
-                list_of_models.append(kmeans_model())
+            elif model == 'knn_model':
+                list_of_models.append(knn_model())
             elif model == 'decision_tree_model':
                 list_of_models.append(decision_tree_model())
             elif model == 'bayes_model':
