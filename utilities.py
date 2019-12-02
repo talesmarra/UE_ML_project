@@ -61,7 +61,7 @@ def validation(model, x, y):
         return model.score(x, y)
 
 
-def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag, image_folders="Images"):
+def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag, image_folders="Output/Images"):
     """
 
     :param model: instance of the model
@@ -127,13 +127,31 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag,
     plt.savefig(image_folders + "/" + fig_name)
     plt.close()
 
+def create_accs_file(filepath, dataset):
+    """
 
-def comparation():
-    pass
+    :param filepath: accuracy file location
+    :param dataset: dataset name
+    :return: file
+    """
+
+    accs_file = open(filepath, "w+")
+
+    accs_file.write("Accuracy file for: " + dataset + " dataset" + "\n")
+
+    return accs_file
 
 
-def optimize_hyperparam(model, min_accuracy):
-    pass
+def print_acc_2_file(file, model, accuracy):
+    """
+
+    :param file: file where to write
+    :param model: model name
+    :param accuracy: accuracy obtained with that model
+    :return:
+    """
+
+    file.write(models_string_dic[model]+": "+str(accuracy)+"\n")
 
 
 models_string_dic = {
