@@ -46,4 +46,6 @@ python3 main.py --dataset <DATASET_NAME> --models <LIST OF MODELS>
 ```
 Where dataset can be either _kidney-disease_ or _bank-note_.
 
+An additional parameter is _--do_pca_, if you want to have a PCA analysis performed. 
+
 The list of available models are: _svm_model_, _knn_model_, _neural_network_, _decision_tree_model_, _bayes_model_. They have to be passed separated by comma.
