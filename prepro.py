@@ -8,11 +8,13 @@ import pandas as pd
 import os
 import numpy as np
 from sklearn import preprocessing
+from sklearn.decomposition import PCA
+from mlxtend.plotting import plot_pca_correlation_graph
+import matplotlib.pyplot as plt
 
 
-def load_preprocessing_data(path,header = 'infer', index_col = None, binar = False):
-
-    df = pd.read_csv(path,header = header, index_col=index_col)
+def load_preprocessing_data(path, header='infer', index_col=None, binar=False):
+    df = pd.read_csv(path, header=header, index_col=index_col)
     lines = df.shape[0]
     columns = df.shape[1]
     x = df.drop(df.columns[columns - 1], axis=1)
@@ -38,7 +40,7 @@ def load_preprocessing_data(path,header = 'infer', index_col = None, binar = Fal
     else:
         print("Cleaning process done")
 
-    #scale and normalize
+    # scale and normalize
     xn = scale_norm(xn, varx, modx)
     print("Scaling and normalize process done")
     print(labely)
@@ -78,6 +80,7 @@ def stringDetection(x):
 
     return var, xn
 
+
 def replacement(xn, mod):
     xf = pd.DataFrame(np.zeros(shape=(xn.shape[0], 1)), columns=[xn.name], index=np.arange(0, xn.shape[0]))
     if mod == 2:
@@ -99,7 +102,6 @@ def cleaning(var, xn, binar, target):
     label = {}
     for i in range(len(var)):
 
-
         if not var[i]:
 
             mod.append('numeric')
@@ -109,19 +111,19 @@ def cleaning(var, xn, binar, target):
             if binar:
                 Ncases = len(var[i])
                 v = [i for i in range(len(var[i]))]
-                #print("Binarization...", xn.columns[i])
+                # print("Binarization...", xn.columns[i])
                 xn[xn.columns[i]] = xn[xn.columns[i]].replace(var[i], v)
                 if target:
                     for k in range(len(v)):
                         label[v[k]] = var[i][k]
                 var[i] = []
 
-                #print(xn[xn.columns[i]].mean())
+                # print(xn[xn.columns[i]].mean())
 
                 xn.loc[:, xn.columns[i]] = replacement(xn[xn.columns[i]], Ncases)
-                #print(xn[xn.columns[i]].mean())
+                # print(xn[xn.columns[i]].mean())
             else:
-                xn[xn.columns[i]].fillna(method ='bfill', inplace = True)
+                xn[xn.columns[i]].fillna(method='bfill', inplace=True)
     if not label and target:
         labels = list(set(xn[xn.columns[0]]))
         v = [i for i in range(len(labels))]
@@ -130,3 +132,36 @@ def cleaning(var, xn, binar, target):
 
     return var, xn, mod, label
 
+
+def pca(x, dataset):
+    """
+
+    :param x:
+    :param dataset:
+    :return:
+    """
+    if dataset == 'kidney-disease':
+        n = 10
+        pca_instance = PCA(n_components=n)
+        pca_instance.fit(x)
+        x = pca_instance.transform(x)
+        var = sum(pca_instance.explained_variance_[:n]) * 100 / sum(pca_instance.explained_variance_)
+        print('The {} principal components are responsible for {}% of the variance'.format(n, var))
+        feature_names = ['id', 'age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr', 'bu', 'sc', 'sod', 'pot',
+                         'hemo', 'pcv', 'wc', 'rc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane'][:n]
+        figure, correlation_matrix = plot_pca_correlation_graph(x, feature_names, figure_axis_size=10)
+        plt.savefig('Output/Images' + "/" + 'PCA for dataset {}'.format(dataset))
+        plt.close()
+        return x
+    elif dataset == 'bank-note':
+        n = 2
+        pca_instance = PCA(n_components=n)
+        pca_instance.fit(x)
+        x = pca_instance.transform(x)
+        var = sum(pca_instance.explained_variance_[:n]) * 100 / sum(pca_instance.explained_variance_)
+        print('The {} principal components are responsible for {}% of the variance'.format(n, var))
+        feature_names = ['V1', 'V2', 'V3', 'V4'][:n]
+        figure, correlation_matrix = plot_pca_correlation_graph(x, feature_names, figure_axis_size=10)
+        plt.savefig('Output/Images' + "/" + 'PCA for dataset {}'.format(dataset))
+        plt.close()
+        return x

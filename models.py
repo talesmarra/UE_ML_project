@@ -27,7 +27,7 @@ def decision_tree_model():
     return tree.DecisionTreeClassifier()
 
 
-def neural_network(input_dim,n_neurons_per_layer=None, n_layers=3):
+def neural_network(input_dim, n_neurons_per_layer=None, n_layers=3):
     """
     :return: instance of the model
     """
@@ -61,8 +61,9 @@ def gaussian_bayes_model():
     return GaussianNB()
 
 
-def call_models(list_models, dataset):
+def call_models(list_models, dataset, do_pca):
     """
+    :param do_pca: if to do pca or not
     :param dataset: type of dataset
     :param: list_models: the names of the models you want to use
     :type list_models: list
@@ -80,9 +81,15 @@ def call_models(list_models, dataset):
                 list_of_models.append(gaussian_bayes_model())
             elif model == 'neural_network':
                 if dataset == 'kidney-disease':
-                    input_dim = 24
+                    if do_pca:
+                        input_dim = 10
+                    else:
+                        input_dim = 24
                 else:
-                    input_dim = 4
+                    if do_pca:
+                        input_dim = 2
+                    else:
+                        input_dim = 4
                 try:
                     list_of_models.append(neural_network(input_dim))
                 except:
