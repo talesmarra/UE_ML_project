@@ -1,0 +1,151 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{caption}
+\usepackage[utf8]{inputenc}
+\usepackage{supertabular}
+\usepackage[T1]{fontenc}
+\usepackage{icomma}
+\usepackage{array} 
+\usepackage{color}
+\usepackage{amsmath,mathtools}
+\usepackage{bbm}
+\usepackage{amssymb,amsfonts}
+\usepackage{esint}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage[left=2.5cm,right=2.5cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{hyperref}
+\usepackage[english]{babel}
+\usepackage[bottom]{footmisc}
+\usepackage{gensymb}
+\usepackage{tabulary}
+\usepackage{fancyhdr}
+\usepackage{siunitx}
+\usepackage{textcomp}
+\usepackage[siunitx]{circuitikz}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage{parskip}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{15pt}
+\setlength\extrarowheight{2pt}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage[ampersand]{easylist}
+%\usepackage{subfigure}
+\usepackage{hhline}
+\usepackage{datetime}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{emptypage}
+%\renewcommand\headrulewidth{1pt}
+%\fancyhead[L]{\textbf{Titre}}
+\def \kawFigPath {Output/Images}
+%\fancyhead[C]{}
+%\fancyhead[R]{Prénom Nom}
+%\renewcommand\footrulewidth{1pt}
+%\fancyfoot[C]{\textbf{Page \thepage/\pageref{LastPage}}}
+%\fancyfoot[R]{\today \quad \currenttime }
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+\includegraphics[scale=0.3]{\kawFigPath /IMTA.jpg}
+\line(1,0){400}\\
+[2mm]
+\begin{large}
+\textbf{Machine Learning - Binary Classification}\\ 
+\end{large}
+\line(1,0){250}\\
+[1.5cm]
+by\\
+QUINTANA Gonzalo\\
+MARRA Tales\\
+WANG Lei\\
+AGUDELO Santiago\\
+[2.5cm]
+Dans le cadre du cours\\
+Nom du cours (Code du cours)\\ 
+[2.5cm]
+Travail présenté à\\
+Nom du professeur\\
+[4cm]
+TAF Mathematical Computing Engenieering\\
+IMT Atlantique\\
+[1cm]
+\today
+\end{center} 
+\end{titlepage}
+
+\section*{Introduction}
+
+The following report summarizes our work on Machine Learning course project. This project consisted in binary classification of two datasets. The first dataset we took into account was the “Banknote Authentication Dataset”, in which data was extracted from images that were taken for evaluating the authentication procedure for banknotes. The second dataset we considered was the “Chronic Kidney disease Dataset”, which consisted in 25 features which may allow predicting a patient with chronic kidney disease.
+
+The main goal of the project was to apply on practical datasets some of the different machine learning algorithms that were introduced during course sessions, all this by adopting a teamwork-based collaborative approach. It was also searched to raise consciousness about good programming practices, which are necessary for all developed codes to be organized, understandable and properly documented. 
+
+First, the datasets will be described as well as the pre-processing they require. Then, the binary classification problem will be solved for both datasets by using machine learning algorithms such as support vector machines, neural networks, decision trees and clustering techniques. The obtained results will be presented and discussed; this will allow evaluating the pertinence of the different algorithms in terms of their performance and complexity. In the end, a conclusion section will summarize the main points of discussion as well as the principal difficulties we encountered during the project’s realization. 
+
+\section{Datasets: description and pre-processing}
+
+\subsection{Banknote Authentication Dataset}
+These data were extracted from images that were taken from genuine and forged banknote-like specimens. These images have a size of 400x400 pixels with a resolution of about 660 dpi. In addition, wavelet transform was used to extract different features from images.
+
+The variance, skewness and curtosis of the wavelet transformed image, the entropy of the image and its class are included in the dataset. This last information sets whether the image corresponds to a genuine of a forged specimen; it is therefore our objective to develop machine learning algorithms allowing to predict the image's class from information on the dataset. 
+
+\subsection{Chronic Kidney Disease Dataset}
+The data was taken over a 2 months period in India. It includes 25 features that allow predicting the presence of chronic kidney disease. Our goal is therefore to use the information contained in the dataset to determine through machine learning algorithms whether a patient suffers from this disease (we will call this case ckd) or not (we will call this case notckd). 
+
+\subsection{Preprocessing}
+
+The datasets we worked on encountered problems such as missing values, out-of-range values, invalid characters, non-centered data, etc. Also, some of the data corresponded to text that cannot be directly processed; therefore, a conversion to a numerical format is necessary.
+
+For pre-processing data, we developed a module that can be applied to a general dataset.This way, we could use the same procedure to pre-process both of the datasets concerned by this project. 
+In such module, the user must indicate the repertory where data are localized and whether the header arrow and the index column are present or not. The user is also requested if text data should be transformed into numerical data. 
+
+The following steps allow obtaining a exploitable dataset: 
+\begin{enumerate}
+    \item The files (.text or .csv) are read through pandas in Python. 
+    \item Features and targets are separated. 
+    \item For each feature and target, the strings they contain are identified. In this same step, all special characters are left behind. 
+    \item Data are cleansed. If there happens to be a missing value in a numerical column (feature), it is replaced by the average value of the column. For modal columns (i.e, the columns that contain strings), strings are converted into a numerical format. For example, the words yes/no are converted to a binary format 1/0. If these columns happen to have missing values, they are filled with random data in a way the proportion of the values in the column doesn't change. 
+    \item Features are normalized (the mean is subtracted and the result is scaled in order to have unit variance). 
+    
+\end{enumerate}
+\section{SVM}
+The main goal of this algorithm is to separate binary data through an hyperplane. Since data may not be linearly separable, the kernel trick may be used to map data into a higher dimensional space, in which it would become linearly separable. 
+
+SVM was implemented through scikit-learn library. This function solves the following optimization problem, given training vectors $x_i$ and $y_i \in {0,1}$ : 
+
+\begin{center}
+   $$ \min\limits_{w, \zeta} \hspace{0.5cm} \frac{1}{2} w^Tw + C\sum_{i=1}^{n} \zeta_i$$
+$$st \hspace{0.5cm} y_i(w^T\varphi(x_i)+b \geq 1- \zeta_i$$ 
+   $$\zeta_i \geq 0$$
+\end{center}
+Its dual problem: 
+\begin{center}
+   $$ \min\limits_{\alpha} \hspace{0.5cm} \frac{1}{2} \alpha^TQ\alpha -e^T\alpha$$
+$$st \hspace{0.5cm} y^T\alpha=0$$ 
+   $$0 \leq \alpha_i \leq C$$
+\end{center}
+
+$e$ is an only ones vector and the matrix $Q$ is defined as $Q_{ij}=y_iy_jK(x_i,x_j)$, where $K(x_i,x_j)=\varphi(x_i)^T\varphi(x_j)$ is the kernel that implicitly maps our data into a higher dimensional space. 
+
+For our implementation, we defined $K(x,x')=exp(-\gamma ||x-x'||^2)$ with $\gamma=\frac{1}{N\cdot var(x)}$. 
+The following figure shows the confusion matrices for training and test data that were obtained when running the algorithm on the Kidney Disease Dataset:
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-bank-note-cm-train}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-bank-note-cm-test}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices SVM}\label{figxx}
+\end{figure}
+
+\end{document}

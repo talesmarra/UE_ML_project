@@ -30,7 +30,7 @@ def train_model(model, x, y, epochs=50):
     """
     if isinstance(model, Sequential):
 
-        model.fit(x, y, epochs=epochs)
+        model.fit(x, y, epochs=epochs, verbose=0)
 
     else:
         model.fit(x, y)
@@ -61,7 +61,7 @@ def validation(model, x, y):
         return model.score(x, y)
 
 
-def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag, image_folders="Images"):
+def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag, dataset, image_folders="Output/Images"):
     """
 
     :param model: instance of the model
@@ -70,6 +70,7 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag,
     :param model_string: name of model
     :param cm_labels: type of colormap
     :param train_flag: true if train, else false
+    :param dataset: dataset used,for naming the image
     :param image_folders: folder to save images
     :return:
     """
@@ -103,10 +104,10 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag,
 
     if train_flag:
         title = model_string + ": confusion matrix for train set"
-        fig_name = model_string + '-cm-train.png'
+        fig_name = model_string + '-' + dataset + '-cm-train.png'
     else:
         title = model_string + ": confusion matrix for test set"
-        fig_name = model_string + '-cm-test.png'
+        fig_name = model_string + '-' + dataset + '-cm-test.png'
 
     labels = ['', '', cm_labels[0], '', '', '', cm_labels[1]]
 
@@ -127,14 +128,36 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag,
     plt.savefig(image_folders + "/" + fig_name)
     plt.close()
 
+def create_accs_file(filepath, dataset):
+    """
 
-def comparation():
-    pass
+    :param filepath: accuracy file location
+    :param dataset: dataset name
+    :return: file
+    """
+
+    accs_file = open(filepath, "w+")
+
+    accs_file.write("Accuracy file for: " + dataset + " dataset" + "\n")
+
+    return accs_file
 
 
-def optimize_hyperparam(model, min_accuracy):
-    pass
+def print_acc_2_file(file, model, accuracy):
+    """
 
+    :param file: file where to write
+    :param model: model name
+    :param accuracy: accuracy obtained with that model
+    :return:
+    """
+
+    acc_str = '%.3f' % accuracy
+
+    file.write(models_string_dic[model] + ": " + acc_str +"\n")
+
+
+# Dictionary used to set the image title more properly
 
 models_string_dic = {
     'decision_tree_model': 'Decision tree',
