@@ -36,13 +36,15 @@
 %\usepackage{subfigure}
 \usepackage{hhline}
 \usepackage{datetime}
+\usepackage{tikz}
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows}
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{emptypage}
 %\renewcommand\headrulewidth{1pt}
 %\fancyhead[L]{\textbf{Titre}}
-\def \kawFigPath {Output/Images}
 %\fancyhead[C]{}
+\def \kawFigPath {Output/Images}
 %\fancyhead[R]{Prénom Nom}
 %\renewcommand\footrulewidth{1pt}
 %\fancyfoot[C]{\textbf{Page \thepage/\pageref{LastPage}}}
@@ -112,40 +114,215 @@ The following steps allow obtaining a exploitable dataset:
     \item Features are normalized (the mean is subtracted and the result is scaled in order to have unit variance). 
     
 \end{enumerate}
+In all the algorithms that will be further mentioned, the proportion of the training set and the test set is of 2/3 and 1/3 of the dataset, respectively. 
+
+\section{PCA}
+ When representing each exemplary as a point in the variables space, principal components are obtained as the succession of orthogonal vectors that best fits the data (this is, the succession of vectors that minimizes the error one commits when projecting the data into these vectors). It is possible to calculate such vectors as the eigenvectors of the correlation matrix of data; each of which is associated to an eigenvalue that indicates the total contribution of each principal component to the variation of the data. 
+
+When taking into account the most important components, this is, those corresponding to the highest eigenvalues, it is possible to reduce the problem to a lower dimension. Conversely, it is possible to represent variables in an individual space in order to determine how principal components are correlated to them. 
+
+\begin{figure}[ht]
+    \centering
+        \centering \includegraphics[width=0.5\textwidth]{\kawFigPath /PCA_for_dataset_bank-note.png}
+        \caption{Correlation Circle obtained through PCA}\label{figxx}
+\end{figure}
+
 \section{SVM}
-The main goal of this algorithm is to separate binary data through an hyperplane. Since data may not be linearly separable, the kernel trick may be used to map data into a higher dimensional space, in which it would become linearly separable. 
-
-SVM was implemented through scikit-learn library. This function solves the following optimization problem, given training vectors $x_i$ and $y_i \in {0,1}$ : 
-
-\begin{center}
+The main goal of this algorithm is to separate binary data through an hyperplane. Since data may not be linearly separable, the kernel trick may be used to map data into a higher dimensional space, in which it would become linearly separable. SVM was implemented through scikit-learn library. This function solves the following optimization problem, given training vectors $x_i$ and $y_i \in \lbrace0,1\rbrace$ : 
    $$ \min\limits_{w, \zeta} \hspace{0.5cm} \frac{1}{2} w^Tw + C\sum_{i=1}^{n} \zeta_i$$
 $$st \hspace{0.5cm} y_i(w^T\varphi(x_i)+b \geq 1- \zeta_i$$ 
    $$\zeta_i \geq 0$$
-\end{center}
 Its dual problem: 
-\begin{center}
    $$ \min\limits_{\alpha} \hspace{0.5cm} \frac{1}{2} \alpha^TQ\alpha -e^T\alpha$$
 $$st \hspace{0.5cm} y^T\alpha=0$$ 
    $$0 \leq \alpha_i \leq C$$
-\end{center}
 
 $e$ is an only ones vector and the matrix $Q$ is defined as $Q_{ij}=y_iy_jK(x_i,x_j)$, where $K(x_i,x_j)=\varphi(x_i)^T\varphi(x_j)$ is the kernel that implicitly maps our data into a higher dimensional space. 
 
 For our implementation, we defined $K(x,x')=exp(-\gamma ||x-x'||^2)$ with $\gamma=\frac{1}{N\cdot var(x)}$. 
-The following figure shows the confusion matrices for training and test data that were obtained when running the algorithm on the Kidney Disease Dataset:
+The following figures show the confusion matrices for training and test data that were obtained when running the algorithm on both datasets. It can be stated that this algorithm reaches a perfect performance when applied on the banknote dataset : indeed, none of the fake bills in the test set is labeled as true and vice-versa. When looking at the kidney disease dataset, none of the healthy patients from the test data are labeled as sick, but as much as 1\% of the sick ones are diagnosed as healthy. This rate should be, however, ideally as close to zero as possible.
 
 \begin{figure}[ht]
     \centering
     \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
-        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-bank-note-cm-train}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-bank-note-cm-train.png}
         \caption{Confusion matrix of training data}\label{ligne_on}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.45\textwidth}
-        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-bank-note-cm-test}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-bank-note-cm-test.png}
         \caption{Confusion matrix test data}\label{ligne_off}
     \end{subfigure}
-    \caption{Confusion matrices SVM}\label{figxx}
+    \caption{Confusion matrices in the Banknote dataset}\label{figxx}
 \end{figure}
 
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-kidney-disease-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /SVM-kidney-disease-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Kidney Disease dataset}\label{figxx}
+\end{figure}
+
+\section{KNN}
+KNN is a non-parametric method used for classification. This algorithm requires placing a certain number of trained examples in the feature space (the class of these examples is therefore known in advance). A new sample is introduced and is classified in function of the class of its K nearest neighbors, where K is a parameter one must previously fix and neighborhood is defined in function a metric that is usually the euclidean distance. The class that will be assigned to the new sample is generally the most frequent one among its K closest neighbors. 
+From a statistical approach, it can be shown that this classification rule is actually the one that maximizes the posterior probability $p(y|x)$, where $y$ stands for the class and $x$ for the sample to be classified. 
+
+The following figures show the obtained confusion matrices when applying this algorithm to both datasets. It can be seen that KNN has an outstanding performance on the test data corresponding to the banknote dataset. Indeed, none of the examples are misclassified. When applying the algorithm to the Kidney Dataset, however, it can be seen that even though no healthy patient is diagnosed as sick, as much as 6\% of the sick ones are diagnosed as healthy, which is considerably high and results in a bad performance of KNN for this specific application. 
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /KNN-bank-note-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /KNN-bank-note-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Banknote dataset}\label{figxx}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /KNN-kidney-disease-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /KNN-kidney-disease-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Kidney Disease dataset}\label{figxx}
+\end{figure}
+
+\section{Neural networks}
+A four layer neural network was implemented by using the library Keras. Each neuron's output is a function of the weighted sum of its inputs. Such function is known as activation function and it determines whether and in what extent the neuron's output is propagated through the network and affect the overall system's output. 
+
+The first layer uses five neurons with a ReLU activation function; the second layer consists in three neurons with a tanh activation function; the third layer is composed of two neurons with same activation function as the former, and the final layer consists of a single neuron with a sigmoid activation function. 
+
+The neural network approach leads to the confusion matrices shown below. For the banknote dataset, 1\% of the fake bills are labeled as real and vice-versa. Concerning the kidney disease set, none of the healthy patients as diagnosed as sick, but as much as 1\% of the sick ones are diagnosed as healthy. SVM performs better than the used neural network in the first dataset, while it has a similar performance when applied on the second dataset. 
+The result may change in function of the chosen architecture, and  it can therefore be possible to build a neural network which performs better than this one or even better than SVM, which is so far the most performing algorithm. 
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Neural_network-bank-note-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Neural_network-bank-note-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Banknote dataset}\label{figxx}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Neural_network-kidney-disease-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Neural_network-kidney-disease-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Kidney Disease dataset}\label{figxx}
+\end{figure}
+
+\section{Decision trees}
+Decision Tree is a non-parametric supervised learning method used for both classification and regression tasks. In general, decision trees are constructed via an algorithmic method that identifies ways to split a data set based on different conditions. The decision rules are generally in form of if-then-else statements. The deeper the tree, the more complex the rules and fitter the model.
+
+In our implementation, we used skicit-learn library. The chosen splitting criteria was Gini, which favours pure nodes as it measures how often a randomly chosen element from the set would be incorrectly labeled if it was randomly labeled according to the distribution of labels in the leave. 
+
+The following confusions matrices were obtained when running this algorithm on both datasets:
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Decision_tree-bank-note-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Decision_tree-bank-note-cm-train.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Banknote dataset}\label{figxx}
+\end{figure}
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Decision_tree-kidney-disease-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Decision_tree-kidney-disease-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Kidney Disease dataset}\label{figxx}
+\end{figure}
+
+Training data are classified with no error in both datasets. For the banknote dataset, none of the fake bills from the test data is labeled as real, whereas 3\% of the true bills are labeled as false. Concerning the kidney disease dataset, as much as 2\% of the sick patients are diagnosed as being healthy, whereas none of the healthy patients is diagnosed as being sick. The false negative rate doesn't seem to be high, but in health issues it happens to be the most important one and it should be ideally zero. Therefore, some improvements could be made in order to lower this rate, even if it results in a slight augmentation of the false positive rate. 
+
+\section{Bayesian approach}
+Given a class variable $y$ and a dependent feature vector $x$, the Bayes rules states:
+
+$$p(y|x)=\frac{p(x|y)p(y)}{p(x)}$$
+
+Since the denominator is constant for a given input, maximizing the posterior probability $p(y|x)$ is equivalent to maximizing the numerator of the expression above. Therefore, given a feature vector $x$, its class can be estimated as it follows: 
+
+$$\hat{y}= \arg \max\limits_{y} p(x|y)p(y)$$
+
+$p(y)$ is estimated as the frequency of class $y$ in the dataset. The performance of the classification relies on how accurate our previous knowledge of the distribution $p(x|y)$ is. A naive yet good first approach is to model this distribution as Gaussian. 
+
+Implementing the previous decision rule by using skicit-learn gives the confusion matrices for the considered datasets. It can be stated that the overall performance of this technique is way lower than that of the other algorithms. For example, when taking into account the Kidney Disease dataset, the test data false negative rate is as high as 7\%. This means that if we were talking about actual patients, 7\% of the sick ones would have been diagnosed as healthy. This rate is relatively high when considering disease diagnose. 
+When looking at the banknote dataset, as much as 9\% of counterfeit bills are classified as real and as much as 25\% of the real ones are classified as fake ; both results show the bayesian classifier is not well suited for this dataset. 
+
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Bayes_classifier-bank-note-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Bayes_classifier-bank-note-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Banknote dataset}\label{figxx}
+\end{figure}
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth} % "0.45" donne ici la largeur de l'image
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Bayes_classifier-kidney-disease-cm-train.png}
+        \caption{Confusion matrix of training data}\label{ligne_on}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering \includegraphics[width=\textwidth]{\kawFigPath /Bayes_classifier-kidney-disease-cm-test.png}
+        \caption{Confusion matrix test data}\label{ligne_off}
+    \end{subfigure}
+    \caption{Confusion matrices in the Kidney Disease dataset}\label{figxx}
+\end{figure}
+
+
+This performance can be explained by errors in our modeling hypotheses. Indeed, we supposed our training data had Gaussian distribution when fixing the class $y$, which might actually be a coarse approximation. Previous statistic analysis of the data can be performed in order to determine a better estimate of $p(x|y)$; this way, our modeling hypothesis would have fitted our training data and it would probably have led to a more acceptable performance. 
+
+\section{Discussion on good programming practices}
+\section*{Conclusion}
+
+Through this document, we exposed the implementation of different machine learning algorithms on two different datasets. The analysis of their performance relies on the metric we use, and the choice of the metric isn't evident since it depends on the nature of the problem itself. For example, when studying the Kidney Disease dataset some of the algorithms threw a false negative rate of about 2\%. However, if the test is applied on a population that happens to have a million sick people, this apparently small percentage would mean two thousand people who do have the disease would be incorrectly diagnosed, which wouldn't be acceptable. 
 \end{document}
