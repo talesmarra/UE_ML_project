@@ -144,24 +144,24 @@ def pca(x, dataset):
         n = 10
         pca_instance = PCA(n_components=n)
         pca_instance.fit(x)
-        x = pca_instance.transform(x)
+        xp = pca_instance.transform(x)
         var = sum(pca_instance.explained_variance_[:n]) * 100 / sum(pca_instance.explained_variance_)
         print('The {} principal components are responsible for {}% of the variance'.format(n, var))
-        feature_names = ['id', 'age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr', 'bu', 'sc', 'sod', 'pot',
-                         'hemo', 'pcv', 'wc', 'rc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane'][:n]
+        feature_names = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr', 'bu', 'sc', 'sod', 'pot',
+                         'hemo', 'pcv', 'wc', 'rc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane']
         figure, correlation_matrix = plot_pca_correlation_graph(x, feature_names, figure_axis_size=10)
-        plt.savefig('Output/Images' + "/" + 'PCA for dataset {}'.format(dataset))
+        plt.savefig('Output/Images' + "/" + 'PCA_for_dataset_{}'.format(dataset))
         plt.close()
-        return x
+        return xp
     elif dataset == 'bank-note':
         n = 2
         pca_instance = PCA(n_components=n)
         pca_instance.fit(x)
-        x = pca_instance.transform(x)
+        xp = pca_instance.transform(x)
         var = sum(pca_instance.explained_variance_[:n]) * 100 / sum(pca_instance.explained_variance_)
         print('The {} principal components are responsible for {}% of the variance'.format(n, var))
-        feature_names = ['V1', 'V2', 'V3', 'V4'][:n]
+        feature_names = ['variance', 'skewness', 'curtosis', 'entropy']
         figure, correlation_matrix = plot_pca_correlation_graph(x, feature_names, figure_axis_size=10)
-        plt.savefig('Output/Images' + "/" + 'PCA for dataset {}'.format(dataset))
+        plt.savefig('Output/Images' + "/" + 'PCA_for_dataset_{}'.format(dataset))
         plt.close()
-        return x
+        return xp
