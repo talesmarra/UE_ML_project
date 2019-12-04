@@ -160,9 +160,9 @@ def print_acc_2_file(file, model, accuracy):
 # Dictionary used to set the image title more properly
 
 models_string_dic = {
-    'decision_tree_model': 'Decision tree',
+    'decision_tree_model': 'Decision_tree',
     'knn_model': 'KNN',
     'svm_model': 'SVM',
-    'neural_network': 'Neural network',
-    'bayes_model': 'Bayes classifier'
+    'neural_network': 'Neural_network',
+    'bayes_model': 'Bayes_classifier'
 }
