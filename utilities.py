@@ -84,7 +84,7 @@ def plot_confusion_matrix(model, x, y_true, model_string, cm_labels, train_flag,
     cm = confusion_matrix(y_true, y_pred)
 
     # we normalize the confusion matrix
-
+    print(cm)
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     fig, ax = plt.subplots()

@@ -1,6 +1,2 @@
 Accuracy file for: bank-note dataset
-Decision tree: 0.987
-KNN: 1.000
-SVM: 1.000
-Neural network: 0.989
-Bayes classifier: 0.839
+Bayes_classifier: 0.735

@@ -28,11 +28,11 @@ if __name__ == "__main__":
     if args.dataset == 'kidney-disease':
         path = "data_classification/kidney_disease.csv"
         accs_file_path = accs_file_path + '_kidney_disease.txt'
-        X, y, label = load_preprocessing_data(path, index_col=0, binar=True)  # for kidney_disease
+        X, y, label, mod = load_preprocessing_data(path, index_col=0, binar=True)  # for kidney_disease
     elif args.dataset == 'bank-note':
         path = "data_classification/data_banknote_authentication.txt"
         accs_file_path = accs_file_path + '_bank_note.txt'
-        X, y, label = load_preprocessing_data(path, header=None, binar=True)  # for banknote
+        X, y, label, mod = load_preprocessing_data(path, header=None, binar=True)  # for banknote
     else:
         print('dataset not available or misspelled')
         sys.exit(1)
@@ -41,9 +41,9 @@ if __name__ == "__main__":
     if args.do_pca:
         DO_PCA = True
         if args.dataset == 'kidney-disease':
-            X = pca(X, 'kidney-disease')
+            X = pca(X, 'kidney-disease', mod)
         else:
-            X = pca(X, 'bank-note')
+            X = pca(X, 'bank-note', mod)
     else:
         DO_PCA = False
 

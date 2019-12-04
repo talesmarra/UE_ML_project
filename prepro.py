@@ -44,7 +44,7 @@ def load_preprocessing_data(path, header='infer', index_col=None, binar=False):
     xn = scale_norm(xn, varx, modx)
     print("Scaling and normalize process done")
     print(labely)
-    return xn, yn, labely
+    return xn, yn, labely, modx
 
 
 def scale_norm(xn, var, mod):
@@ -133,25 +133,28 @@ def cleaning(var, xn, binar, target):
     return var, xn, mod, label
 
 
-def pca(x, dataset):
+def pca(x, dataset, mod):
     """
 
     :param x:
     :param dataset:
     :return:
     """
+    xn = x[list(x.columns[np.argwhere(np.array(mod)=='numeric')])]
+    xm = x[list(x.columns[np.argwhere(np.array(mod)=='modal')])]
     if dataset == 'kidney-disease':
         n = 10
         pca_instance = PCA(n_components=n)
-        pca_instance.fit(x)
-        xp = pca_instance.transform(x)
+        pca_instance.fit(xn[list(xn.columns)])
+        xp = pca_instance.transform(xn)
         var = sum(pca_instance.explained_variance_[:n]) * 100 / sum(pca_instance.explained_variance_)
         print('The {} principal components are responsible for {}% of the variance'.format(n, var))
-        feature_names = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba', 'bgr', 'bu', 'sc', 'sod', 'pot',
-                         'hemo', 'pcv', 'wc', 'rc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane']
-        figure, correlation_matrix = plot_pca_correlation_graph(x, feature_names, figure_axis_size=10)
+        feature_names = list(xn.columns)
+        figure, correlation_matrix = plot_pca_correlation_graph(xn, feature_names, figure_axis_size=10)
         plt.savefig('Output/Images' + "/" + 'PCA_for_dataset_{}'.format(dataset))
         plt.close()
+        xp = pd.DataFrame(data = xp, index=xn.index)
+        xp = pd.concat([xp, xm], axis=1)
         return xp
     elif dataset == 'bank-note':
         n = 2
